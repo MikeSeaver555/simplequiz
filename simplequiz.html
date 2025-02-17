@@ -212,7 +212,8 @@
         </label>
         <label>
           Tiempo por pregunta (segundos):
-          <input type="number" id="timePerQuestion" value="30" min="5">
+          <!-- Valor por defecto 0; al ser 0 no habrá tiempo límite -->
+          <input type="number" id="timePerQuestion" value="0" min="0">
         </label>
       </div>
     </div>
@@ -333,20 +334,23 @@
       iniciarTemporizador();
     }
 
+    // Si el valor es mayor que 0 se inicia el temporizador, sino se omite para tener tiempo ilimitado
     function iniciarTemporizador() {
       clearInterval(temporizador);
       let tiempoRestante = parseInt(document.getElementById('timePerQuestion').value);
-      temporizador = setInterval(() => {
-        tiempoRestante--;
-        if (tiempoRestante <= 0) {
-          clearInterval(temporizador);
-          noContestadas++;
-          actualizarEstadisticas();
-          document.getElementById('respuestaCodificada').innerText = respuestaCorrecta + " ❌";
-          document.getElementById('resultado').innerText = "Tiempo agotado.";
-          setTimeout(siguientePregunta, waitingTimeFail);
-        }
-      }, 1000);
+      if (tiempoRestante > 0) {
+        temporizador = setInterval(() => {
+          tiempoRestante--;
+          if (tiempoRestante <= 0) {
+            clearInterval(temporizador);
+            noContestadas++;
+            actualizarEstadisticas();
+            document.getElementById('respuestaCodificada').innerText = respuestaCorrecta + " ❌";
+            document.getElementById('resultado').innerText = "Tiempo agotado.";
+            setTimeout(siguientePregunta, waitingTimeFail);
+          }
+        }, 1000);
+      }
     }
 
     function verificarRespuesta() {
@@ -437,7 +441,7 @@
       e.preventDefault();
     });
 
-    // Opcional: Mantiene el scroll en el input cuando recibe foco
+    // Mantiene el scroll en el input cuando recibe foco (para móviles)
     document.getElementById('respuesta').addEventListener('focus', function() {
       this.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
