@@ -6,7 +6,7 @@
   <title>Quiz</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
   <style>
-    /* Tus estilos existentes */
+    /* Se mantienen los estilos originales */
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -38,21 +38,104 @@
       font-weight: 500;
       margin-right: 10px;
     }
-    /* Ajustamos el estilo del desplegable */
+    /* Se reemplaza el input file por un select que tendrá un estilo similar */
     .top-bar select {
       margin-right: 10px;
       padding: 6px;
       font-size: 16px;
     }
-    /* Resto de estilos… */
+    .config {
+      margin-bottom: 20px;
+    }
+    .radio-group {
+      display: flex;
+      align-items: center;
+    }
+    .radio-group label {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    .checkbox-group label,
+    .settings-group label {
+      display: block;
+      margin: 10px 0;
+      font-weight: 500;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+    input[type="text"] {
+      font-size: 20px;
+      padding: 12px;
+      height: 45px;
+    }
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+    button {
+      background: #ff8a65;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #ff7043;
+      transform: scale(1.02);
+    }
+    #pregunta {
+      font-size: 24px;
+      margin: 20px 0;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      color: #333;
+    }
+    #respuestaCodificada {
+      font-size: 22px;
+      margin: 15px 0;
+      letter-spacing: 4px;
+      font-weight: bold;
+      color: #333;
+    }
+    .centered-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .botones {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    #resultado {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+    .stats {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    .stats span {
+      margin-right: 15px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Barra superior con el desplegable de CSV -->
+    <!-- Se mantiene la estructura original, solo se reemplaza el input file -->
     <div class="top-bar">
       <span>Quiz</span>
-      <!-- Desplegable para seleccionar el CSV desde internet -->
       <select id="csvSelector">
         <option value="">Selecciona un archivo CSV</option>
         <option value="https://raw.githubusercontent.com/MikeSeaver555/simplequiz/refs/heads/main/csv_files/TB1.csv">Archivo 1</option>
@@ -60,10 +143,8 @@
       </select>
       <span id="fileInfo"></span>
     </div>
-    
-    <!-- El resto de la configuración y elementos del juego (preguntas, botones, etc.) -->
+    <!-- Configuraciones -->
     <div class="config">
-      <!-- Radios, checkbox y otros inputs... -->
       <div class="radio-group">
         <label>
           <input type="radio" name="translationDirection" value="esToEn" checked>
@@ -130,7 +211,7 @@
     let preguntasJugadas = 0;
     let aciertos = 0, fallos = 0, noContestadas = 0;
 
-    // Cargar y procesar el CSV desde la URL seleccionada en el desplegable
+    // Se carga y procesa el CSV desde la URL seleccionada
     document.getElementById('csvSelector').addEventListener('change', function(event) {
       const url = event.target.value;
       if (!url) return;
@@ -157,7 +238,6 @@
             }
             return { es: partes[0].trim(), en: partes[1].trim() };
           });
-          // Mezclar preguntas
           preguntas = preguntas.sort(() => Math.random() - 0.5);
           document.getElementById('fileInfo').innerText = `${lineas.length} preguntas cargadas`;
         })
@@ -172,7 +252,6 @@
         alert("Carga primero un archivo de preguntas desde el desplegable.");
         return;
       }
-      // Resetear estadísticas y mostrar elementos del juego
       aciertos = 0; fallos = 0; noContestadas = 0;
       actualizarEstadisticas();
       document.getElementById('startButton').innerText = "Reiniciar Juego";
@@ -183,7 +262,6 @@
       document.getElementById('respuestaCodificada').style.display = "block";
       
       preguntasJugadas = 0;
-      // Mezclar nuevamente las preguntas para cada juego
       preguntas = preguntas.sort(() => Math.random() - 0.5);
       siguientePregunta();
     }
