@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <style>
+    /* Estilos generales */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
+    }
+    .top-bar span {
+      font-size: 20px;
+      font-weight: 500;
+      margin-right: 10px;
+    }
+    .top-bar select {
+      margin-right: 10px;
+      padding: 6px;
+      font-size: 16px;
+    }
+    /* Ajustes para el span que muestra el número de líneas cargadas */
+    #fileInfo {
+      flex: 1;
+      word-wrap: break-word;
+      max-width: 100%;
+    }
+    /* Resto de estilos… */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <span>Quiz</span>
+      <select id="csvSelector">
+        <option value="">Selecciona un archivo CSV</option>
+        <option value="https://raw.githubusercontent.com/MikeSeaver555/simplequiz/refs/heads/main/csv_files/TB1.csv">Archivo 1</option>
+        <option value="https://ejemplo.com/archivo2.csv">Archivo 2</option>
+      </select>
+      <span id="fileInfo"></span>
+    </div>
+    <!-- Resto de la estructura del juego -->
+    <input type="text" id="respuesta" placeholder="Escribe tu respuesta" style="display:none;">
+    <!-- ... -->
+  </div>
+  
+  <script>
+    // Código del juego...
+    
+    // Desplaza el input a la vista al obtener el foco (para móviles)
+    document.getElementById('respuesta').addEventListener('focus', function() {
+      this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    
+    // Resto de la lógica del juego...
+  </script>
+</body>
+</html>
