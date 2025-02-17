@@ -121,6 +121,7 @@
       align-items: center;
       justify-content: center;
     }
+    /* Contenedor para los botones (ahora con el orden intercambiado) */
     .botones {
       display: flex;
       gap: 10px;
@@ -224,9 +225,10 @@
     <p id="respuestaCodificada" style="display:none;"></p>
     <div class="centered-container">
       <input type="text" id="respuesta" placeholder="Escribe tu respuesta" style="display:none;">
+      <!-- Orden de botones intercambiado: primero Solución, luego Responder -->
       <div class="botones">
-        <button id="answerButton" onclick="verificarRespuesta()" style="display:none;">Responder</button>
         <button id="solutionButton" onclick="mostrarSolucion()" style="display:none;">Solución</button>
+        <button id="answerButton" onclick="verificarRespuesta()" style="display:none;">Responder</button>
       </div>
     </div>
     <p id="resultado"></p>
@@ -420,7 +422,20 @@
       document.getElementById('noContestadas').innerText = noContestadas;
     }
 
-    // Cuando el input recibe el foco, se desplaza a la vista (para evitar que el teclado lo tape)
+    // Para PC: usa keydown en lugar de keypress para detectar Enter
+    document.getElementById('respuesta').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        verificarRespuesta();
+      }
+    });
+
+    // Para móvil: evita que el botón "Responder" haga blur del input
+    document.getElementById('answerButton').addEventListener('mousedown', function(e) {
+      e.preventDefault();
+    });
+
+    // Opcional: si deseas que el input se desplace al obtener foco (mantener scroll)
     document.getElementById('respuesta').addEventListener('focus', function() {
       this.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
