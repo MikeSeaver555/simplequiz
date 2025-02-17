@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- Configuración del viewport para dispositivos móviles -->
+  <!-- Configuración del viewport para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
@@ -23,11 +23,11 @@
     .container {
       width: 100%;
       max-width: 600px;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       padding: 20px;
       margin: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     .top-bar {
       display: flex;
@@ -104,7 +104,7 @@
       font-size: 24px;
       margin: 20px 0;
       font-weight: 500;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
       color: #333;
     }
     #respuestaCodificada {
@@ -120,7 +120,7 @@
       align-items: center;
       justify-content: center;
     }
-    /* Contenedor de botones (orden: primero "Solución", luego "Responder") */
+    /* Contenedor para los botones con el orden intercambiado */
     .botones {
       display: flex;
       gap: 10px;
@@ -180,7 +180,6 @@
         <option value="">Selecciona un archivo CSV</option>
         <option value="https://raw.githubusercontent.com/MikeSeaver555/simplequiz/refs/heads/main/csv_files/TB1.csv">TB1</option>
         <option value="https://raw.githubusercontent.com/MikeSeaver555/simplequiz/refs/heads/main/csv_files/TB2.csv">TB2</option>
-        <!-- Puedes añadir más opciones aquí -->
       </select>
       <span id="fileInfo"></span>
     </div>
@@ -213,7 +212,7 @@
         </label>
         <label>
           Tiempo por pregunta (segundos):
-          <!-- Valor por defecto 0: sin límite -->
+          <!-- Valor por defecto 0; al ser 0 no habrá tiempo límite -->
           <input type="number" id="timePerQuestion" value="0" min="0">
         </label>
       </div>
@@ -221,12 +220,12 @@
     <!-- Botón para iniciar/reiniciar el juego -->
     <button id="startButton" onclick="iniciarJuego()">Iniciar Juego</button>
     
-    <!-- Área del juego (inicialmente oculta) -->
+    <!-- Área del juego (se mostrarán al iniciar) -->
     <div id="pregunta" style="display:none;"></div>
     <p id="respuestaCodificada" style="display:none;"></p>
     <div class="centered-container">
       <input type="text" id="respuesta" placeholder="Escribe tu respuesta" style="display:none;">
-      <!-- Botones: primero "Solución", luego "Responder" -->
+      <!-- Orden de botones: primero "Solución", luego "Responder" -->
       <div class="botones">
         <button id="solutionButton" onclick="mostrarSolucion()" style="display:none;">Solución</button>
         <button id="answerButton" onclick="verificarRespuesta()" style="display:none;">Responder</button>
@@ -253,19 +252,21 @@
     let preguntasJugadas = 0;
     let aciertos = 0, fallos = 0, noContestadas = 0;
 
-    // Carga el CSV usando arrayBuffer y TextDecoder (ISO-8859-1)
+    // Carga el CSV desde la URL seleccionada en el desplegable
     document.getElementById('csvSelector').addEventListener('change', function(event) {
       const url = event.target.value;
       if (!url) return;
       fetch(url)
-        .then(response => response.arrayBuffer())
-        .then(buffer => {
-          const decoder = new TextDecoder("ISO-8859-1");
-          const contenido = decoder.decode(buffer);
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al cargar el CSV');
+          }
+          return response.text();
+        })
+        .then(contenido => {
           let lineas = contenido.split('\n')
             .map(linea => linea.trim())
             .filter(linea => linea);
-          // Elimina encabezados si existen
           if (lineas.length > 0 && (lineas[0].toLowerCase().includes("pregunta") ||
               lineas[0].toLowerCase().includes("español"))) {
             lineas.shift();
@@ -333,7 +334,7 @@
       iniciarTemporizador();
     }
 
-    // Si el tiempo por pregunta es > 0, se inicia el temporizador; si es 0, se deja tiempo ilimitado.
+    // Si el valor es mayor que 0 se inicia el temporizador, sino se omite para tener tiempo ilimitado
     function iniciarTemporizador() {
       clearInterval(temporizador);
       let tiempoRestante = parseInt(document.getElementById('timePerQuestion').value);
@@ -424,7 +425,7 @@
       document.getElementById('noContestadas').innerText = noContestadas;
     }
 
-    // PC: Detecta Enter en el input
+    // Para PC: Detecta Enter con keydown en el input
     document.getElementById('respuesta').addEventListener('keydown', function(event) {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -432,7 +433,7 @@
       }
     });
 
-    // En móvil: Evita que los botones "Responder" y "Solución" causen blur en el input
+    // En móvil: Evita que los botones "Responder" y "Solución" hagan blur del input
     document.getElementById('answerButton').addEventListener('mousedown', function(e) {
       e.preventDefault();
     });
@@ -440,7 +441,7 @@
       e.preventDefault();
     });
 
-    // Mantiene el input en vista al recibir foco (para que el teclado virtual no lo tape)
+    // Mantiene el scroll en el input cuando recibe foco (para móviles)
     document.getElementById('respuesta').addEventListener('focus', function() {
       this.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
