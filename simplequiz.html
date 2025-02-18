@@ -339,7 +339,14 @@
         document.getElementById('pregunta').innerText = preguntaObj.en;
         respuestaCorrecta = preguntaObj.es;
       }
-      respuestaOculta = respuestaCorrecta.replace(/\S/g, '_');
+      // respuestaOculta = respuestaCorrecta.replace(/\S/g, '_');
+      if (document.getElementById('mostrarCaracteresEspeciales').checked) {
+        // Reemplaza solo letras (mayúsculas y minúsculas) y números
+        respuestaOculta = respuestaCorrecta.replace(/[A-Za-z0-9]/g, '_');
+      } else {
+        // Reemplaza cualquier caracter no espacio
+        respuestaOculta = respuestaCorrecta.replace(/\S/g, '_');
+      }
       intentosRestantes = 4;
       document.getElementById('respuestaCodificada').innerText = respuestaOculta;
       document.getElementById('respuesta').value = "";
