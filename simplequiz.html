@@ -137,6 +137,15 @@
     .stats span {
       margin-right: 15px;
     }
+    /* animación */
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
     /* Media queries para móviles */
     @media (max-width: 600px) {
       .container {
@@ -431,14 +440,26 @@
       document.getElementById('respuestaCodificada').innerText = respuestaOculta;
     }
 
+    
+
     function mostrarSolucion() {
-      clearInterval(temporizador);
-      noContestadas++;
-      actualizarEstadisticas();
-      document.getElementById('respuestaCodificada').innerText = respuestaCorrecta + " ❌";
-      document.getElementById('resultado').innerText = "";
-      setTimeout(siguientePregunta, waitingTimeFail);
-    }
+    clearInterval(temporizador);
+    noContestadas++;
+    actualizarEstadisticas();
+    const respuestaElem = document.getElementById('respuestaCodificada');
+    respuestaElem.innerText = respuestaCorrecta + " ❌";
+    
+    // Añade la animación
+    respuestaElem.classList.add('fade-in');
+    
+    // Opcional: eliminar la clase después de la animación para que se pueda reproducir en futuras ocasiones
+    setTimeout(() => {
+      respuestaElem.classList.remove('fade-in');
+    }, 800);
+    
+    document.getElementById('resultado').innerText = "";
+    setTimeout(siguientePregunta, waitingTimeFail);
+  }
 
     function actualizarEstadisticas() {
       document.getElementById('aciertos').innerText = aciertos;
